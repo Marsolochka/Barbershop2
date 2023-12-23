@@ -8,10 +8,9 @@
 
 class ClientService {
 public:
+    void generateReport(const std::string& startDateTime, const std::string& endDateTime);
     void addClient(const Client& client);
-       void scheduleService(); // Объявление метода scheduleService
-       // Остальные методы и члены класса
-    // Изменим параметры на объект типа Service
+    void scheduleService();
     void displayClientServiceMenu();
     void viewClientsFromFile();
     void editClientData();
@@ -26,8 +25,8 @@ public:
     void writeClientAppointment();
     void setDescription(const std::string& description);
     void viewSchedule();
-    void cancelClientAppointment(const std::string& date, const std::string& time);
     void writeClientAppointments(const std::string& startDate, const std::string& endDate);
+   void deleteClientAppointment(const std::string& date, const std::string& time);
 private:
     std::vector<Client> clients;
     std::vector<Service> services; // Изменим тип вектора для хранения объектов типа Service

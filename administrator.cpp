@@ -1,4 +1,6 @@
 #include "administrator.h"
+#include "client_service.h"
+#include <regex>
 
 void Administrator::enterAdministratorMenu() {
   std::string adminPassword;
@@ -22,24 +24,29 @@ void Administrator::enterAdministratorMenu() {
       std::cin >> adminSubMenuChoice;
 
       switch (adminSubMenuChoice) {
-      case 8:
-          {
-              std::string startDate, endDate;
-              std::cout << "Enter start date (YYYY-MM-DD): ";
-              std::cin >> startDate;
-              std::cout << "Enter end date (YYYY-MM-DD): ";
-              std::cin >> endDate;
+      case 8: // Пункт меню для финансов
+      {
+          std::string startDateTime, endDateTime;
 
-              // Добавьте вызов метода для записи клиентских записей в файл с учетом указанного периода времени
-              // Например:
-              clientService.writeClientAppointments(startDate, endDate);
+          std::regex dateTimePattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}");
 
-              // Дополнительная логика для обработки финансовых данных и отчетности
-              // Например, подсчет общей суммы услуг за указанный период времени и запись в файл
+          do {
+              std::cout << "Enter the start date and time for the financial report (e.g. 2023-01-01 00:00): ";
+              std::cin.ignore(); // очистить символ новой строки из входного буфера
+              std::getline(std::cin, startDateTime);
+          } while (!std::regex_match(startDateTime, dateTimePattern));
 
-              std::cout << "Financial report for the period from " << startDate << " to " << endDate << " has been generated." << std::endl;
-          }
+          do {
+              std::cout << "Enter the end date and time for the financial report (e.g. 2023-12-31 23:59): ";
+              std::getline(std::cin, endDateTime);
+          } while (!std::regex_match(endDateTime, dateTimePattern));
+
+          ClientService clientService;
+          // Вызываем метод для генерации финансового отчёта
+          clientService.generateReport(startDateTime, endDateTime);
+          system("pause"); // Приостанавливаем выполнение программы до нажатия клавиши
           break;
+      }
       }
     } while (adminSubMenuChoice != 9);
   } else {

@@ -90,6 +90,45 @@ void ClientService::saveClientsToFile() {
     }
 }
 
+void ClientService::generateReport(const std::string& startDateTime, const std::string& endDateTime) {
+        // Открываем файл с записями клиентов
+        std::ifstream appointmentsFile("client_appointments.txt");
+        if (!appointmentsFile.is_open()) {
+            std::cerr << "Error: Unable to open client appointments file" << std::endl;
+            return;
+        }
+
+        // Открываем файл для записи отчёта
+        std::ofstream reportFile("report.txt");
+        if (!reportFile.is_open()) {
+            std::cerr << "Error: Unable to open report file" << std::endl;
+            return;
+        }
+
+        std::string appointment;
+        while (std::getline(appointmentsFile, appointment)) {
+            // Разбиваем запись о клиенте на части
+            std::string client, service, date, time;
+            size_t clientPos = appointment.find("Client: ") + 8;
+            size_t servicePos = appointment.find("Service: ") + 9;
+            size_t datePos = appointment.find("Date: ") + 6;
+            size_t timePos = appointment.find("Time: ") + 6;
+            client = appointment.substr(clientPos, servicePos - clientPos - 9);
+            service = appointment.substr(servicePos, datePos - servicePos - 10);
+            date = appointment.substr(datePos, timePos - datePos - 7);
+            time = appointment.substr(timePos);
+
+            // Проверяем, попадает ли запись в указанный период
+            if (date + " " + time >= startDateTime && date + " " + time <= endDateTime) {
+                reportFile << "Client: " << client << " | Service: " << service << " | Date: " << date << " | Time: " << time << std::endl;
+            }
+        }
+
+        appointmentsFile.close();
+        reportFile.close();
+        std::cout << "Report has been successfully generated for the period from " << startDateTime << " to " << endDateTime << std::endl;
+    }
+
 void ClientService::writeClientAppointment() {
     // Открываем файл с клиентами
     std::ifstream clientsFile("clients.txt");
@@ -162,8 +201,42 @@ void ClientService::writeClientAppointment() {
         std::cout << "Client " << chosenClient << " has been successfully added for the service " << chosenService << " at " << time << " on " << date << std::endl;
     } else {
         std::cerr << "Error: Unable to open file for writing" << std::endl;
+
     }
 }
+
+void ClientService::deleteClientAppointment(const std::string& date, const std::string& time) {
+    std::ifstream inputFile("client_appointments.txt");
+    if (!inputFile.is_open()) {
+        std::cerr << "Error: Unable to open client appointments file" << std::endl;
+        return;
+    }
+
+    std::vector<std::string> lines;
+    std::string line;
+    while (std::getline(inputFile, line)) {
+        std::string appointment = "Date: " + date + " | Time: " + time;
+        if (line.find(appointment) == std::string::npos) {
+            lines.push_back(line);
+        }
+    }
+    inputFile.close();
+
+    std::ofstream outputFile("client_appointments.txt");
+    if (!outputFile.is_open()) {
+        std::cerr << "Error: Unable to open client appointments file for writing" << std::endl;
+        return;
+    }
+
+    for (const auto& l : lines) {
+        outputFile << l << std::endl;
+    }
+    outputFile.close();
+
+    std::cout << "Client appointments for the date " << date << " and time " << time << " have been successfully deleted" << std::endl;
+}
+
+
 
 void ClientService::saveServicesToFile() {
     std::ifstream readFile("services.txt"); // Открываем файл для чтения
@@ -198,46 +271,6 @@ void ClientService::saveServicesToFile() {
         file.close();
     } else {
         std::cerr << "Error: Unable to open file for writing" << std::endl;
-    }
-}
-
-void ClientService::writeClientAppointments(const std::string& startDate, const std::string& endDate) {
-    std::ofstream outputFile("client_appointments.txt", std::ios::app);
-    if (!outputFile.is_open()) {
-        std::cerr << "Error: Unable to open file for writing" << std::endl;
-        return;
-    }
-
-    for (size_t i = 0; i < clients.size(); ++i) {
-        const Client& client = clients[i];
-        for (size_t j = 0; j < client.getAppointments().size(); ++j) {
-            const Service& service = client.getAppointments()[j]; // Заменяем Appointment на Service
-            if (service.getDate() >= startDate && service.getDate() <= endDate) {
-                outputFile << "Client: " << client.getName() << " | Service: " << service.getName() << " | Date: " << service.getDate() << " | Time: " << service.getTime() << " | Cost: " << service.getCost() << std::endl;
-            }
-        }
-    }
-
-    double totalCost = 0.0;
-    for (size_t i = 0; i < clients.size(); ++i) {
-        const Client& client = clients[i];
-        for (size_t j = 0; j < client.getAppointments().size(); ++j) {
-            const Service& service = client.getAppointments()[j]; // Заменяем Appointment на Service
-            if (service.getDate() >= startDate && service.getDate() <= endDate) {
-                totalCost += service.getCost();
-            }
-        }
-    }
-
-
-    outputFile.close();
-
-    std::ofstream costSummaryFile("cost_summary.txt", std::ios::app);
-    if (costSummaryFile.is_open()) {
-        costSummaryFile << "Total cost for the period from " << startDate << " to " << endDate << ": " << totalCost << std::endl;
-        costSummaryFile.close();
-    } else {
-        std::cerr << "Error: Unable to open file for writing cost summary" << std::endl;
     }
 }
 
@@ -350,33 +383,6 @@ void ClientService::editClientData() {
     }
 }
 
-void ClientService::cancelClientAppointment(const std::string& date, const std::string& time) {
-    std::ifstream inputFile("client_appointments.txt");
-    if (!inputFile.is_open()) {
-        std::cerr << "Error: Unable to open client appointments file" << std::endl;
-        return;
-    }
-
-    std::vector<std::string> appointments;
-    std::string appointment;
-    while (std::getline(inputFile, appointment)) {
-        if (appointment.find("Date: " + date + " | Time: " + time) == std::string::npos) {
-            appointments.push_back(appointment);
-        }
-    }
-    inputFile.close();
-
-    std::ofstream outputFile("client_appointments.txt", std::ofstream::trunc);
-    if (outputFile.is_open()) {
-        for (std::vector<std::string>::iterator it = appointments.begin(); it != appointments.end(); ++it) {
-            outputFile << *it << std::endl;
-        }
-        outputFile.close();
-        std::cout << "Appointment on " << date << " at " << time << " has been successfully canceled" << std::endl;
-    } else {
-        std::cerr << "Error: Unable to open client appointments file for writing" << std::endl;
-    }
-}
 
 
 

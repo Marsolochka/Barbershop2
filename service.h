@@ -19,16 +19,13 @@ public:
         return time;
     }
 
-    std::vector<Appointment> getAppointments() const {
-        return appointments;
-    }
+
 private:
     std::string name;
     double cost;
     std::string description;
     std::string date;
     std::string time;
-    std::vector<Appointment> appointments;
 };
 
 #endif // SERVICE_H

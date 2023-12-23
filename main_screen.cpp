@@ -29,12 +29,11 @@ void MainScreen::startMainLoop(const std::string & inputUsername) {
       system("cls");
       ClientService clientService;
       std::string date, time;
-      std::cout << "Enter the date and time of the appointment to cancel:" << std::endl;
-      std::cout << "Date (e.g. 2023-09-15): ";
+      std::cout << "Enter the date for the appointment to cancel: ";
       std::cin >> date;
-      std::cout << "Time (e.g. 14:30): ";
+      std::cout << "Enter the time for the appointment to cancel: ";
       std::cin >> time;
-      clientService.cancelClientAppointment(date, time);
+      clientService.deleteClientAppointment(date, time);
 
     } else if (choice == 3) {
       system("cls");
