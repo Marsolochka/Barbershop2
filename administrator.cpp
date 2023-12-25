@@ -225,4 +225,15 @@ void Administrator::viewAllEmployees() {
     }
 }
 
+void Administrator::saveItemsToFile(const std::string& filename) {
+       std::ofstream file(filename);
+       if (file.is_open()) {
+           for (const auto& item : items) {
+               file << item.first << "," << item.second << "\n";
+           }
+           file.close();
+       } else {
+           throw std::runtime_error("Unable to open file for writing: " + filename);
+       }
+   }
 
