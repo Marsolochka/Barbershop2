@@ -30,7 +30,7 @@ class ClientService {
     void saveServicesToFile(); // Объявление метода для сохранения услуг в файл
     void writeClientAppointment(); // Объявление метода для записи приема клиента
     void setDescription(const std::string & description); // Объявление метода для установки описания
-    void viewSchedule(); // Объявление метода для просмотра расписания
+    void viewSchedule(); // Обeъявление метода для просмотра расписания
     void writeClientAppointments(const std::string & startDate,
         const std::string & endDate); // Объявление метода для записи приемов клиента в указанный период
     void deleteClientAppointment(const std::string & date,

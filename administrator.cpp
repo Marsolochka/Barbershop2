@@ -80,7 +80,6 @@ void Administrator::enterAdministratorMenu() {
                     for (size_t i = 0; i < items.size(); ++i) {
                         std::pair<std::string, std::string> item = items[i];
                         std::cout << "Item ID: " << i << ", Name: " << item.first << ", Description: " << item.second << "\n";
-                        system("pause");
                     }
                     break;
                 }
@@ -248,4 +247,10 @@ void Administrator::editItemInfo(int itemId, const std::string &newName, const s
    } else {
        throw std::runtime_error("Not found item with ID: " + std::to_string(itemId));
    }
+}
+
+
+int Administrator::addItem(const std::string &name, const std::string &description) {
+   items.emplace_back(name, description);
+   return items.size() - 1;
 }

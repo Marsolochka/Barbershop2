@@ -357,18 +357,27 @@ void ClientService::editClientData() {
     for (size_t i = 0; i < clients.size(); ++i) {  // Перебираем всех клиентов
         if (clients[i].getName() == clientName) {  // Проверяем, существует ли клиент с данным именем
             found = true;   // Устанавливаем флаг нахождения клиента
-            std::string newName, newEmail, newPhoneNumber;
-            std::cout << "Enter new name for the client: "; // Подсказка для ввода нового имени
-            std::cin >> newName; // Получаем новое имя для клиента
-            std::cout << "Enter new email for the client: "; // Подсказка для ввода новой почты
-            std::cin >> newEmail;  // Получаем новую почту для клиента
-            std::cout << "Enter new phone number for the client: "; // Подсказка для ввода нового номера телефона
-            std::cin >> newPhoneNumber; // Получаем новый номер телефона для клиента
+            std::string consent;
+            std::cout << "Do you consent to update the client data? (yes/no): ";
+            std::cin >> consent;
 
-            clients[i] = Client(newName, newEmail, newPhoneNumber);  // Изменяем данные клиента
-            saveClientsToFile(); // Сохраняем измененные данные в файл
-            std::cout << "Client data updated. Press Enter to continue..."; // Подсказка для продолжения
-            std::cin.get(); // Ждать нажатия клавиши Enter
+            if (consent == "yes") {
+                std::string newName, newEmail, newPhoneNumber;
+                std::cout << "Enter new name for the client: "; // Подсказка для ввода нового имени
+                std::cin >> newName; // Получаем новое имя для клиента
+                std::cout << "Enter new email for the client: "; // Подсказка для ввода новой почты
+                std::cin >> newEmail;  // Получаем новую почту для клиента
+                std::cout << "Enter new phone number for the client: "; // Подсказка для ввода нового номера телефона
+                std::cin >> newPhoneNumber; // Получаем новый номер телефона для клиента
+
+                clients[i] = Client(newName, newEmail, newPhoneNumber);  // Изменяем данные клиента
+                saveClientsToFile(); // Сохраняем измененные данные в файл
+                std::cout << "Client data updated successfully." << std::endl; // Подсказка для продолжения
+            } else {
+                std::cout << "Client data was not updated." << std::endl;
+            }
+            std::cout << "Press Enter to continue..."; // Подсказка для продолжения
+            std::cin.ignore(); // Игнорируем символ новой строки во входном потоке
             std::cin.get(); // Ждать нажатия клавиши Enter
             break; // Завершаем цикл после изменения данных клиента
         }
@@ -376,7 +385,7 @@ void ClientService::editClientData() {
     if (!found) { // Если клиент не найден
         std::cout << "Client not found." << std::endl; // Выводим сообщение о том, что клиент не найден
         std::cout << "Press Enter to continue..."; // Подсказка для продолжения
-        std::cin.get(); // Ждать нажатия клавиши Enter
+        std::cin.ignore(); // Игнорируем символ новой строки во входном потоке
         std::cin.get(); // Ждать нажатия клавиши Enter
     }
 }
@@ -410,10 +419,9 @@ void ClientService::displayClientServiceMenu() {
         std::cout << "3. Remove client\n";
         std::cout << "4. View all clients\n";
         std::cout << "5. Add service\n";
-        std::cout << "6. Edit service\n";
-        std::cout << "7. Remove service\n";
-        std::cout << "8. View all services\n";
-        std::cout << "9. Exit\n";
+        std::cout << "6. Remove service\n";
+        std::cout << "7. View all services\n";
+        std::cout << "8. Exit\n";
         std::cout << "Enter your choice: ";
 
         std::cin >> choice; // Получить выбор пользователя
@@ -427,14 +435,25 @@ void ClientService::displayClientServiceMenu() {
             std::cin >> newEmail;
             std::cout << "Enter client phone number: ";
             std::cin >> newPhoneNumber;
+            std::string consent;
 
-            Client newClient(newName, newEmail, newPhoneNumber);
-            addClient(newClient); // Добавить нового клиента
-            std::cout << "Data saved. Press Enter to continue..."; // Подсказка для продолжения
-            std::cin.get(); // Ждать нажатия клавиши Enter
+            std::cout << "Do you consent to add the client data? (yes/no): ";
+            std::cin >> consent;
+
+            if (consent == "yes") {
+                Client newClient(newName, newEmail, newPhoneNumber);
+                addClient(newClient); // Добавить нового клиента
+                std::cout << "Data saved successfully." << std::endl;
+            } else {
+                std::cout << "Client data was not added." << std::endl;
+            }
+
+            std::cout << "Press Enter to continue..."; // Подсказка для продолжения
+            std::cin.ignore(); // Игнорируем символ новой строки во входном потоке
             std::cin.get(); // Ждать нажатия клавиши Enter
             break;
         }
+
         case 2: { // Редактировать данные клиента
             editClientData();
             break;
@@ -476,7 +495,7 @@ void ClientService::displayClientServiceMenu() {
             break;
         }
 
-        case 7: { // Удалить услугу
+        case 6: { // Удалить услугу
             std::string serviceName;
             std::cout << "Enter service name to remove: ";
             std::cin >> serviceName;
@@ -486,7 +505,7 @@ void ClientService::displayClientServiceMenu() {
             std::cin.get(); // Ждать нажатия клавиши Enter
             break;
         }
-        case 8: { // Просмотреть все услуги
+        case 7: { // Просмотреть все услуги
             Service service;
             service.viewServicesFromFile(); // Вызов метода для просмотра услуг
             std::cout << "Press Enter to continue..."; // Подсказка для продолжения
@@ -498,5 +517,5 @@ void ClientService::displayClientServiceMenu() {
             std::cout << "Invalid choice. Please try again.\n";
             break;
         }
-    } while (choice != 9); // Повторять, пока пользователь не выберет выход
+    } while (choice != 8); // Повторять, пока пользователь не выберет выход
 }
