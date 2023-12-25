@@ -225,4 +225,13 @@ void Administrator::viewAllEmployees() {
     }
 }
 
+void Administrator::removeItem(int itemId) {
+   if (itemId < items.size()) {
+       items.erase(items.begin() + itemId);
+   } else {
+       throw std::runtime_error("Not found item with ID: " + std::to_string(itemId));
+   }
+}
+
+
 
