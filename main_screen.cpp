@@ -48,7 +48,7 @@ void MainScreen::startMainLoop(const std::string & inputUsername) {
 
         } else if (choice == 5 && inputUsername == "admin") {  // Если выбор - 5 и имя пользователя "admin"
             system("cls");
-            Administrator admin("Admin Name", "Admin Title"); // Создаем экземпляр класса Administrator с параметрами имени и должности
+            Administrator admin;
             admin.enterAdministratorMenu(); // Вызываем метод для входа в меню администратора
         } else { // Если выбор не соответствует ни одному из предыдущих вариантов
             std::cout << "Invalid choice. Please try again.\n"; // Выводим сообщение об ошибке выбора

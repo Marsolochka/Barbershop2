@@ -10,9 +10,14 @@
 #include "service.h"
 
 class Administrator {
-    public: void enterAdministratorMenu(); // Объявление метода для входа в меню администратора
-    Administrator(const std::string & name,
-        const std::string & jobTitle); // Объявление конструктора класса Administrator
+    public:
+    int addItem(const std::string &name, const std::string &description);
+    void saveItemsToFile(const std::string& filename);
+    void loadItemsFromFile(const std::string& filename);
+    void editItemInfo(int itemId, const std::string &newName, const std::string &newDescription);
+    void removeItem(int itemId);
+    void enterAdministratorMenu(); // Объявление метода для входа в меню администратора
+    Administrator(){}; // Объявление конструктора класса Administrator
     void setName(const std::string & newName); // Объявление метода для установки имени
     void setJobTitle(const std::string & newJobTitle); // Объявление метода для установки должности
     std::string getName(); // Объявление метода для получения имени
@@ -28,9 +33,11 @@ class Administrator {
     std::vector < std::string > employeeNames; // Вектор для хранения имен сотрудников
     void saveEmployeesToFile(); // Метод для сохранения данных о сотрудниках в файл
     std::string getEmployeeInfo(int employeeId); // Метод для получения информации о сотруднике
+    std::pair<std::string, std::string> getItemInfo(int itemId);
 
     private:
     std::string name;
+    std::vector<std::pair<std::string, std::string>> items;
     std::string jobTitle;
     std::vector < std::string > employees; // Вектор для хранения информации о сотрудниках
 };

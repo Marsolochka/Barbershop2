@@ -154,10 +154,11 @@ void ClientService::writeClientAppointment() { // Метод для записи
     int chosenClientIndex;  // Объявляем переменную для выбранного индекса клиента
     std::cout << "Choose the client by entering the index: ";  // Предлагаем ввести индекс выбранного клиента
     std::cin >> chosenClientIndex;  // Считываем выбранный индекс клиента
-    if (chosenClientIndex < 0 || chosenClientIndex >= clients.size()) { // Проверяем корректность выбранного индекса
-        std::cout << "Invalid client index" << std::endl; // Выводим сообщение об ошибке при некорректном выборе индекса
-        return;  // Возвращаемся из метода
+    if (chosenClientIndex < 0 || static_cast<size_t>(chosenClientIndex) >= clients.size()) {
+        std::cout << "Invalid client index" << std::endl;
+        return;
     }
+
     std::string chosenClient = clients[chosenClientIndex]; // Получаем информацию о выбранном клиенте
 
 
@@ -182,10 +183,11 @@ void ClientService::writeClientAppointment() { // Метод для записи
     int chosenServiceIndex; // Объявляем переменную для выбранного индекса услуги
     std::cout << "Choose the service by entering the index: "; // Предлагаем ввести индекс выбранной услуги
     std::cin >> chosenServiceIndex; // Считываем выбранный индекс услуги
-    if (chosenServiceIndex < 0 || chosenServiceIndex >= services.size()) {  // Проверяем корректность выбранного индекса
-        std::cout << "Invalid service index" << std::endl; // Выводим сообщение об ошибке при некорректном выборе индекса
-        return;  // Возвращаемся из метода
+    if (chosenServiceIndex < 0 || static_cast<size_t>(chosenServiceIndex) >= services.size()) {
+        std::cout << "Invalid service index" << std::endl;
+        return;
     }
+
     std::string chosenService = services[chosenServiceIndex]; // Получаем информацию о выбранной услуге
 
     // Ввод даты и времени

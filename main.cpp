@@ -1,5 +1,7 @@
 #include <iostream> //Библиотека ввода-вывода
 
+#include <memory> // Включаем заголовочный файл для std::unique_ptr
+
 #include <limits>
 
 #include "user.h" //Заголовочный файл
@@ -11,6 +13,9 @@
 #include "administrator.h"
 
 int main() {
+    std::unique_ptr<Administrator> admin(new Administrator());
+    std::unique_ptr<ClientService> clientService(new ClientService());
+
     User user1; // Создание объекта класса User с именем user1
     user1.username = "admin"; // Присвоение имени пользователя
     user1.password = "123456"; // Присвоение пароля

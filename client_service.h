@@ -11,6 +11,7 @@
 
 class ClientService {
     public:
+
     void generateReport(const std::string & startDateTime,
         const std::string & endDateTime); // Объявление метода для генерации отчета
     void addClient(const Client & client);  // Объявление метода для добавления клиента

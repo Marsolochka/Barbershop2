@@ -28,7 +28,62 @@ void Administrator::enterAdministratorMenu() {
             std::cout << "Enter your choice: ";
             std::cin >> adminSubMenuChoice;
 
+
             switch (adminSubMenuChoice) {
+            case 1: // Add item
+                {
+                    std::string name, description;
+                    std::cout << "Enter the name of the item: ";
+                    std::cin >> name;
+                    std::cout << "Enter the description of the item: ";
+                    std::cin >> description;
+                    addItem(name, description);
+                    std::cout << "Item added successfully.\n";
+                    system("pause");
+                    break;
+                }
+                case 2: // Remove item
+                {
+                    int itemId;
+                    std::cout << "Enter the ID of the item to remove: ";
+                    std::cin >> itemId;
+                    try {
+                        removeItem(itemId);
+                        std::cout << "Item removed successfully.\n";
+                    } catch (const std::runtime_error& e) {
+                        std::cerr << e.what() << std::endl;
+                    }
+                    system("pause");
+                    break;
+                }
+                case 3: // Edit item
+                {
+                    int itemId;
+                    std::string newName, newDescription;
+                    std::cout << "Enter the ID of the item to edit: ";
+                    std::cin >> itemId;
+                    std::cout << "Enter the new name of the item: ";
+                    std::cin >> newName;
+                    std::cout << "Enter the new description of the item: ";
+                    std::cin >> newDescription;
+                    try {
+                        editItemInfo(itemId, newName, newDescription);
+                        std::cout << "Item edited successfully.\n";
+                    } catch (const std::runtime_error& e) {
+                        std::cerr << e.what() << std::endl;
+                    }
+                    system("pause");
+                    break;
+                }
+                case 4: // View all items
+                {
+                    for (size_t i = 0; i < items.size(); ++i) {
+                        std::pair<std::string, std::string> item = items[i];
+                        std::cout << "Item ID: " << i << ", Name: " << item.first << ", Description: " << item.second << "\n";
+                        system("pause");
+                    }
+                    break;
+                }
             case 5: // Пункт меню для добавления сотрудника
             {
                 std::string name, JobTitle;
@@ -37,6 +92,7 @@ void Administrator::enterAdministratorMenu() {
                 std::cout << "Enter employee job title: ";
                 std::cin >> JobTitle;
                 addEmployee(name, JobTitle);
+                system("pause");
                 break;
             }
             case 6: // Menu item for removing an employee
@@ -53,7 +109,6 @@ void Administrator::enterAdministratorMenu() {
                 break;
             }
 
-            // Option 7 in the administrator menu
             case 7: // Menu item for viewing all employees
             {
                 viewAllEmployees();
@@ -112,13 +167,6 @@ void Administrator::enterAdministratorMenu() {
     }
 }
 
-Administrator::Administrator(const std::string & adminame, // Инициализируем имя администратора
-    const std::string & admjobTitle) {
-    this -> name = name;
-    this -> jobTitle = jobTitle;
-}
-
-
 void Administrator::addEmployee(const std::string & name,
     const std::string & jobTitle) {
     employees.push_back(name + " - " + jobTitle);  // Добавляем нового сотрудника в список
@@ -176,3 +224,5 @@ void Administrator::viewAllEmployees() {
         std::cout << "ID: " << i << ", Employee Info: " << employees[i] << std::endl;
     }
 }
+
+
