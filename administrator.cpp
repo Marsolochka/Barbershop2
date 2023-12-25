@@ -233,5 +233,13 @@ void Administrator::removeItem(int itemId) {
    }
 }
 
+std::pair<std::string, std::string> Administrator::getItemInfo(int itemId) {
+   if (itemId < items.size()) {
+       return items[itemId];
+   } else {
+       throw std::runtime_error("Not found item with ID: " + std::to_string(itemId));
+   }
+}
+
 
 
