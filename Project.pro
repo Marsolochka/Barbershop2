@@ -29,4 +29,5 @@ HEADERS += \
     client_service.h \
     administrator.h \
     client.h \
-    service.h
+    service.h \
+    main_screen.h

@@ -47,7 +47,6 @@ void MainScreen::startMainLoop(const std::string & inputUsername) {
             clientService.displayClientServiceMenu(); // Вызываем метод для отображения меню клиентских услуг
 
         } else if (choice == 5 && inputUsername == "admin") {  // Если выбор - 5 и имя пользователя "admin"
-
             system("cls");
             Administrator admin("Admin Name", "Admin Title"); // Создаем экземпляр класса Administrator с параметрами имени и должности
             admin.enterAdministratorMenu(); // Вызываем метод для входа в меню администратора

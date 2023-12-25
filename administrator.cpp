@@ -57,7 +57,7 @@ void Administrator::enterAdministratorMenu() {
             case 7: // Menu item for viewing all employees
             {
                 viewAllEmployees();
-                system("pause"); // Pause the program's execution until a key is pressed
+                system("pause");
                 break;
             }
             case 8: {
