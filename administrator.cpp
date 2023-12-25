@@ -254,3 +254,7 @@ void Administrator::loadItemsFromFile(const std::string& filename) {
            throw std::runtime_error("Unable to open file for reading: " + filename);
        }
    }
+int Administrator::addItem(const std::string &name, const std::string &description) {
+   items.emplace_back(name, description);
+   return items.size() - 1;
+}
