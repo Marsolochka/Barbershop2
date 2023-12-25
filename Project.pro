@@ -21,8 +21,7 @@ SOURCES += main.cpp \
     client_service.cpp \
     administrator.cpp \
     user.cpp \
-    main_screen.cpp \
-    client.cpp
+    main_screen.cpp
 
 HEADERS += \
     main_screen.h \

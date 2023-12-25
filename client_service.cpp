@@ -1,412 +1,407 @@
-// client_service.cpp
-#include "client_service.h"
-#include "service.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
+#include "client_service.h" // Включение заголовочного файла для класса ClientService
 
-Service::Service(const std::string& name, double cost, const std::string& description)
-    : name(name), cost(cost), description(description) {}
+#include "service.h" // Включение заголовочного файла для класса Service
 
-std::string Service::getName() const {
-    return name;
+#include <iostream> // Включение стандартной библиотеки для ввода/вывода
+
+#include <fstream> // Включение стандартной библиотеки для работы с файлами
+
+#include <string> // Включение стандартной библиотеки для работы со строками
+
+#include <sstream>  // Включение стандартной библиотеки для работы со вводом/выводом в строковом формате
+
+
+Service::Service(const std::string & name, double cost,
+    const std::string & description): name(name), cost(cost), description(description) {}  // Определение конструктора класса Service
+
+std::string Service::getName() const { // Определение метода getName класса Service
+    return name;  // Возврат имени услуги
 }
 
-double Service::getCost() const {
-    return cost;
+double Service::getCost() const {  // Определение метода getCost класса Service
+    return cost;  // Возврат стоимости услуги
 }
 
-std::string Service::getDescription() const {
-    return description;
+std::string Service::getDescription() const { // Определение метода getDescription класса Service
+    return description; // Возврат описания услуги
 }
 
-void Service::setCost(double newCost) {
-    cost = newCost;
+void Service::setCost(double newCost) { // Определение метода setCost класса Service
+    cost = newCost;  // Установка новой стоимости для услуги
 }
-void Service::setDescription(const std::string& newDescription) {
-    description = newDescription;
+void Service::setDescription(const std::string & newDescription) { // Определение метода setDescription класса Service
+    description = newDescription;  // Установка нового описания для услуги
 }
 
-
-void ClientService::removeClient(const std::string& clientName) {
-    for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it) {
-        if (it->getName() == clientName) {
+void ClientService::removeClient(const std::string & clientName) { //Определение метода для удаления клиента
+    for (std::vector < Client > ::iterator it = clients.begin(); it != clients.end(); ++it) { // Цикл по всем клиентам в векторе
+        if (it -> getName() == clientName) { // Проверка имени клиента
             clients.erase(it); // Удалить клиента из вектора
             saveClientsToFile(); // Перезаписать данные в файл
-            std::cout << "Client removed successfully." << std::endl;
+            std::cout << "Client removed successfully." << std::endl; // Вывод сообщения об успешном удалении клиента
             return;
         }
     }
-    std::cout << "Client not found." << std::endl;
+    std::cout << "Client not found." << std::endl; // Вывод сообщения, если клиент не найден
 }
 
-void ClientService::viewServicesFromFile() {
-    std::ifstream file("services.txt");
-    if (file.is_open()) {
-        std::string line;
-        while (std::getline(file, line)) {
+void Service::viewServicesFromFile() {  // Определение метода для просмотра услуг
+    std::ifstream file("services.txt");  // Открытие файла services.txt для чтения
+    if (file.is_open()) { // Проверка успешного открытия файла
+        std::string line; // Объявление переменной для хранения строки из файла
+        while (std::getline(file, line)) { // Цикл по строкам файла
             std::cout << line << std::endl; // Вывод каждой строки из файла
         }
         file.close(); // Закрыть файл
     } else {
-        std::cerr << "Error: Unable to open file for reading" << std::endl;
+        std::cerr << "Error: Unable to open file for reading" << std::endl; // Вывод сообщения об ошибке, если файл не удалось открыть
     }
 }
 
-void ClientService::loadClientsFromFile() {
-    std::ifstream file("clients.txt");
-    if (file.is_open()) {
-        std::string name, email, phoneNumber;
-        while (file >> name >> email >> phoneNumber) {
+void ClientService::loadClientsFromFile() { // Метод для загрузки клиентов из файла
+    std::ifstream file("clients.txt"); // Открытие файла clients.txt для чтения
+    if (file.is_open()) { // Проверка успешного открытия файла
+        std::string name, email, phoneNumber;  // Объявление переменных для хранения данных о клиенте
+        while (file >> name >> email >> phoneNumber) { // Чтение данных о клиенте из файла
             clients.push_back(Client(name, email, phoneNumber)); // Добавить клиента в вектор
         }
         file.close(); // Закрыть файл
     } else {
-        std::cerr << "Error: Unable to open file for reading" << std::endl;
+        std::cerr << "Error: Unable to open file for reading" << std::endl; // Вывод сообщения об ошибке, если файл не удалось открыть
     }
-    if (file.bad()) {
-        std::cerr << "Error: Failed to read data from file" << std::endl;
+    if (file.bad()) { // Проверка наличия ошибок при чтении файла
+        std::cerr << "Error: Failed to read data from file" << std::endl; // Вывод сообщения об ошибке при чтении данных из файла
     }
 }
 
-
-
-void ClientService::addClient(const Client& client) {
-    clients.push_back(client); // Add client to the list
-    saveClientsToFile(); // Save clients to file
+void ClientService::addClient(const Client & client) { // Метод для добавления клиента
+    clients.push_back(client); // Добавить клиента в список
+    saveClientsToFile(); // Сохранить клиентов в файл
 }
 
-void ClientService::saveClientsToFile() {
-    std::ofstream file("clients.txt"); // Открыть файл для записи (существующий файл будет перезаписан)
-    if (file.is_open()) {
-        for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it) {
-            const Client& client = *it;
+void ClientService::saveClientsToFile() { // Метод записи данный о клиентах в файл
+    std::ofstream file("clients.txt");// Открыть файл для записи
+    if (file.is_open()) { // Проверка успешного открытия файла
+        for (std::vector < Client > ::iterator it = clients.begin(); it != clients.end(); ++it) { // Цикл по клиентам в векторе
+            const Client & client = * it; // Получение ссылки на текущего клиента
             file << client.getName() << " " << client.getEmail() << " " << client.getPhoneNumber() << std::endl; // Записать данные о каждом клиенте в файл
         }
         file.close(); // Закрыть файл
     } else {
-        std::cerr << "Error: Unable to open file for writing" << std::endl;
+        std::cerr << "Error: Unable to open file for writing" << std::endl; // Вывод сообщения об ошибке, если файл не удалось открыть для записи
     }
 }
 
-void ClientService::generateReport(const std::string& startDateTime, const std::string& endDateTime) {
-        // Открываем файл с записями клиентов
-        std::ifstream appointmentsFile("client_appointments.txt");
-        if (!appointmentsFile.is_open()) {
-            std::cerr << "Error: Unable to open client appointments file" << std::endl;
-            return;
-        }
-
-        // Открываем файл для записи отчёта
-        std::ofstream reportFile("report.txt");
-        if (!reportFile.is_open()) {
-            std::cerr << "Error: Unable to open report file" << std::endl;
-            return;
-        }
-
-        std::string appointment;
-        while (std::getline(appointmentsFile, appointment)) {
-            // Разбиваем запись о клиенте на части
-            std::string client, service, date, time;
-            size_t clientPos = appointment.find("Client: ") + 8;
-            size_t servicePos = appointment.find("Service: ") + 9;
-            size_t datePos = appointment.find("Date: ") + 6;
-            size_t timePos = appointment.find("Time: ") + 6;
-            client = appointment.substr(clientPos, servicePos - clientPos - 9);
-            service = appointment.substr(servicePos, datePos - servicePos - 10);
-            date = appointment.substr(datePos, timePos - datePos - 7);
-            time = appointment.substr(timePos);
-
-            // Проверяем, попадает ли запись в указанный период
-            if (date + " " + time >= startDateTime && date + " " + time <= endDateTime) {
-                reportFile << "Client: " << client << " | Service: " << service << " | Date: " << date << " | Time: " << time << std::endl;
-            }
-        }
-
-        appointmentsFile.close();
-        reportFile.close();
-        std::cout << "Report has been successfully generated for the period from " << startDateTime << " to " << endDateTime << std::endl;
+void ClientService::generateReport(const std::string & startDateTime,
+    const std::string & endDateTime) {
+    std::ifstream appointmentsFile("client_appointments.txt"); // Открываем файл с записями клиентов
+    if (!appointmentsFile.is_open()) { // Проверка успешного открытия файла с записями клиентов
+        std::cerr << "Error: Unable to open client appointments file" << std::endl; // Вывод сообщения об ошибке, если файл не удалось открыть
+        return;// Возврат из метода
     }
 
-void ClientService::writeClientAppointment() {
-    // Открываем файл с клиентами
-    std::ifstream clientsFile("clients.txt");
-    if (!clientsFile.is_open()) {
-        std::cerr << "Error: Unable to open clients file" << std::endl;
-        return;
+    std::ofstream reportFile("report.txt"); // Открываем файл для записи отчёта
+    if (!reportFile.is_open()) { // Проверка успешного открытия файла для записи отчёта
+        std::cerr << "Error: Unable to open report file" << std::endl;  // Вывод сообщения об ошибке, если файл не удалось открыть
+        return; // Возврат из метода
+    }
+
+    std::string appointment;  //Объявление переменной для хранения информации о записи клиента
+    while (std::getline(appointmentsFile, appointment)) {  // Цикл по записям о клиентах в файле
+
+        // Разбиваем запись о клиенте на части
+        std::string client, service, date, time; // Объявление переменных для хранения разделенных частей записи о клиенте
+        size_t clientPos = appointment.find("Client: ") + 8; // Поиск позиции начала имени клиента
+        size_t servicePos = appointment.find("Service: ") + 9; // Поиск позиции начала названия услуги
+        size_t datePos = appointment.find("Date: ") + 6;// Поиск позиции начала даты
+        size_t timePos = appointment.find("Time: ") + 6; // Поиск позиции начала времени
+        client = appointment.substr(clientPos, servicePos - clientPos - 9); // Получение имени клиента
+        service = appointment.substr(servicePos, datePos - servicePos - 10);  // Получение названия услуги
+        date = appointment.substr(datePos, timePos - datePos - 7); // Получение даты
+        time = appointment.substr(timePos); // Получение времени
+
+        // Проверяем, попадает ли запись в указанный период
+        if (date + " " + time >= startDateTime && date + " " + time <= endDateTime) { // Проверка попадания записи в указанный период
+            reportFile << "Client: " << client << " | Service: " << service << " | Date: " << date << " | Time: " << time << std::endl; // Запись информации в файл отчёта
+        }
+    }
+
+    appointmentsFile.close(); // Закрытие файла с записями клиентов
+    reportFile.close();  // Закрытие файла отчёта
+    std::cout << "Report has been successfully generated for the period from " << startDateTime << " to " << endDateTime << std::endl; // Вывод сообщения об успешном создании отчёта
+}
+
+void ClientService::writeClientAppointment() { // Метод для записи клиента на услугу
+
+    std::ifstream clientsFile("clients.txt"); // Открываем файл с клиентами
+    if (!clientsFile.is_open()) { // Проверяем, успешно ли открыт файл с клиентами
+        std::cerr << "Error: Unable to open clients file" << std::endl; // Выводим сообщение об ошибке, если файл с клиентами не удалось открыть
+        return; // Возвращаемся из метода
     }
 
     // Выводим список клиентов с их индексами
-    std::vector<std::string> clients;
-    std::string client;
-    int clientIndex = 0;
-    while (std::getline(clientsFile, client)) {
-        clients.push_back(client);
-        std::cout << clientIndex << ". " << client << std::endl;
-        clientIndex++;
+    std::vector < std::string > clients; // Создаем вектор для хранения информации о клиентах
+    std::string client; // Объявляем переменную для хранения информации о каждом клиенте
+    int clientIndex = 0; // Инициализируем индекс клиента
+    while (std::getline(clientsFile, client)) { // Читаем информацию о клиентах из файла
+        clients.push_back(client);  // Добавляем информацию о клиенте в вектор
+        std::cout << clientIndex << ". " << client << std::endl; // Выводим индекс и информацию о клиенте
+        clientIndex++; // Увеличиваем индекс для следующего клиента
     }
-    clientsFile.close();
+    clientsFile.close();  // Закрываем файл с клиентами
 
     // Предоставляем возможность выбрать клиента по индексу
-    int chosenClientIndex;
-    std::cout << "Choose the client by entering the index: ";
-    std::cin >> chosenClientIndex;
-    if (chosenClientIndex < 0 || chosenClientIndex >= clients.size()) {
-        std::cout << "Invalid client index" << std::endl;
-        return;
+    int chosenClientIndex;  // Объявляем переменную для выбранного индекса клиента
+    std::cout << "Choose the client by entering the index: ";  // Предлагаем ввести индекс выбранного клиента
+    std::cin >> chosenClientIndex;  // Считываем выбранный индекс клиента
+    if (chosenClientIndex < 0 || chosenClientIndex >= clients.size()) { // Проверяем корректность выбранного индекса
+        std::cout << "Invalid client index" << std::endl; // Выводим сообщение об ошибке при некорректном выборе индекса
+        return;  // Возвращаемся из метода
     }
-    std::string chosenClient = clients[chosenClientIndex];
+    std::string chosenClient = clients[chosenClientIndex]; // Получаем информацию о выбранном клиенте
 
-    // Открываем файл с услугами
-    std::ifstream servicesFile("services.txt");
-    if (!servicesFile.is_open()) {
-        std::cerr << "Error: Unable to open services file" << std::endl;
-        return;
+
+    std::ifstream servicesFile("services.txt"); // Открываем файл "services.txt" для чтения информации о услугах
+    if (!servicesFile.is_open()) { // Проверяем, успешно ли открыт файл с услугами
+        std::cerr << "Error: Unable to open services file" << std::endl; // Выводим сообщение об ошибке, если файл с услугами не удалось открыть
+        return; // Возвращаемся из метода
     }
 
     // Выводим список услуг с их индексами
-    std::vector<std::string> services;
-    std::string service;
-    int serviceIndex = 0;
-    while (std::getline(servicesFile, service)) {
-        services.push_back(service);
-        std::cout << serviceIndex << ". " << service << std::endl;
-        serviceIndex++;
+    std::vector < std::string > services;  // Создаем вектор для хранения информации о услугах
+    std::string service;  // Объявляем переменную для хранения информации о каждой услуге
+    int serviceIndex = 0; // Инициализируем индекс услуги
+    while (std::getline(servicesFile, service)) { // Читаем информацию об услугах из файла
+        services.push_back(service); // Добавляем информацию об услуге в вектор
+        std::cout << serviceIndex << ". " << service << std::endl;  // Выводим индекс и информацию об услуге
+        serviceIndex++;  // Увеличиваем индекс для следующей услуги
     }
-    servicesFile.close();
+    servicesFile.close(); // Закрываем файл с услугами
 
     // Предоставляем возможность выбрать услугу по индексу
-    int chosenServiceIndex;
-    std::cout << "Choose the service by entering the index: ";
-    std::cin >> chosenServiceIndex;
-    if (chosenServiceIndex < 0 || chosenServiceIndex >= services.size()) {
-        std::cout << "Invalid service index" << std::endl;
-        return;
+    int chosenServiceIndex; // Объявляем переменную для выбранного индекса услуги
+    std::cout << "Choose the service by entering the index: "; // Предлагаем ввести индекс выбранной услуги
+    std::cin >> chosenServiceIndex; // Считываем выбранный индекс услуги
+    if (chosenServiceIndex < 0 || chosenServiceIndex >= services.size()) {  // Проверяем корректность выбранного индекса
+        std::cout << "Invalid service index" << std::endl; // Выводим сообщение об ошибке при некорректном выборе индекса
+        return;  // Возвращаемся из метода
     }
-    std::string chosenService = services[chosenServiceIndex];
+    std::string chosenService = services[chosenServiceIndex]; // Получаем информацию о выбранной услуге
 
     // Ввод даты и времени
-    std::string date, time;
-    std::cout << "Enter the date for the appointment (e.g. 2023-09-15): ";
-    std::cin >> date;
-    std::cout << "Enter the time for the appointment (e.g. 14:30): ";
-    std::cin >> time;
+    std::string date, time; // Объявляем переменные для даты и времени записи
+    std::cout << "Enter the date for the appointment (e.g. 2023-09-15): "; // Предлагаем ввести дату записи
+    std::cin >> date; // Считываем введенную дату
+    std::cout << "Enter the time for the appointment (e.g. 14:30): ";  // Предлагаем ввести время записи
+    std::cin >> time;  // Считываем введенное время
 
     // Запись информации о записи клиента
     std::ofstream outputFile("client_appointments.txt", std::ios::app); // Открываем файл для добавления информации
-    if (outputFile.is_open()) {
+    if (outputFile.is_open()) {  // Проверяем успешное открытие файла для записи
         outputFile << "Client: " << chosenClient << " | Service: " << chosenService << " | Date: " << date << " | Time: " << time << std::endl; // Записываем информацию о клиенте, выбранной услуге и времени записи
-        outputFile.close();
-        std::cout << "Client " << chosenClient << " has been successfully added for the service " << chosenService << " at " << time << " on " << date << std::endl;
+        outputFile.close(); // Закрываем файл
+        std::cout << "Client " << chosenClient << " has been successfully added for the service " << chosenService << " at " << time << " on " << date << std::endl; // Выводим сообщение об успешном добавлении записи клиента
     } else {
-        std::cerr << "Error: Unable to open file for writing" << std::endl;
+        std::cerr << "Error: Unable to open file for writing" << std::endl; // Выводим сообщение об ошибке, если файл не удалось открыть для записи
 
     }
 }
 
-void ClientService::deleteClientAppointment(const std::string& date, const std::string& time) {
-    std::ifstream inputFile("client_appointments.txt");
-    if (!inputFile.is_open()) {
-        std::cerr << "Error: Unable to open client appointments file" << std::endl;
-        return;
+void ClientService::deleteClientAppointment(const std::string & date,
+    const std::string & time) {
+    std::ifstream inputFile("client_appointments.txt"); // Открываем файл для чтения записей о клиентских записях
+    if (!inputFile.is_open()) { // Проверяем, успешно ли открыт файл
+        std::cerr << "Error: Unable to open client appointments file" << std::endl; // Выводим сообщение об ошибке, если файл не удалось открыть
+        return;// Возвращаемся из метода
     }
 
-    std::vector<std::string> lines;
-    std::string line;
-    while (std::getline(inputFile, line)) {
-        std::string appointment = "Date: " + date + " | Time: " + time;
-        if (line.find(appointment) == std::string::npos) {
-            lines.push_back(line);
+    std::vector < std::string > lines;  // Создаем вектор для хранения строк из файла
+    std::string line; // Объявляем переменную для хранения строки
+    while (std::getline(inputFile, line)) {  // Читаем строки из файла
+        std::string appointment = "Date: " + date + " | Time: " + time; // Формируем информацию о записи для удаления
+        if (line.find(appointment) == std::string::npos) { // Проверяем, содержит ли строка информацию о записи для удаления
+            lines.push_back(line);  // Добавляем строку в вектор, если она не соответствует записи для удаления
         }
     }
-    inputFile.close();
+    inputFile.close(); // Закрываем файл
 
-    std::ofstream outputFile("client_appointments.txt");
-    if (!outputFile.is_open()) {
-        std::cerr << "Error: Unable to open client appointments file for writing" << std::endl;
-        return;
+    std::ofstream outputFile("client_appointments.txt"); // Открываем файл для записи
+    if (!outputFile.is_open()) {  // Проверяем, успешно ли открыт файл для записи
+        std::cerr << "Error: Unable to open client appointments file for writing" << std::endl; // Выводим сообщение об ошибке, если файл не удалось открыть для записи
+        return;  // Возвращаемся из метода
     }
 
-    for (const auto& l : lines) {
+    for (const auto & l: lines) {  // Записываем строки из вектора в файл
         outputFile << l << std::endl;
     }
     outputFile.close();
 
-    std::cout << "Client appointments for the date " << date << " and time " << time << " have been successfully deleted" << std::endl;
+    std::cout << "Client appointments for the date " << date << " and time " << time << " have been successfully deleted" << std::endl; // Выводим сообщение об успешном удалении записи
 }
 
+void ClientService::saveServicesToFile() { // Метод для сохранения услуг в файл
+    std::ifstream readFile("services.txt"); // Открываем файл для чтения информации о услугах
+    std::vector < std::string > existingServices;  // Создаем вектор для хранения существующих услуг
 
-
-void ClientService::saveServicesToFile() {
-    std::ifstream readFile("services.txt"); // Открываем файл для чтения
-    std::vector<std::string> existingServices;
-
-    if (readFile.is_open()) {
+    if (readFile.is_open()) { // Проверяем, успешно ли открыт файл
         std::string line;
-        while (std::getline(readFile, line)) {
-            existingServices.push_back(line);
+        while (std::getline(readFile, line)) { // Читаем строки из файла и добавляем их в вектор
+            existingServices.push_back(line);  // Добавляем строку (информацию об услуге) в вектор существующих услуг
         }
-        readFile.close();
+        readFile.close();  // Закрываем файл
     }
 
     std::ofstream file("services.txt", std::ios::app); // Открываем файл для добавления информации в конец
-    if (file.is_open()) {
-        for (size_t i = 0; i < services.size(); ++i) {
-            std::stringstream ss;
-            ss << services[i].getCost();
-            std::string costStr = ss.str();
-            std::string serviceInfo = services[i].getName() + " | Cost: " + costStr + " | " + services[i].getDescription();
-            bool alreadyExists = false;
-            for (size_t j = 0; j < existingServices.size(); ++j) {
-                if (existingServices[j] == serviceInfo) {
-                    alreadyExists = true;
-                    break;
+    if (file.is_open()) {  // Проверяем, успешно ли открыт файл для записи
+        for (size_t i = 0; i < services.size(); ++i) { // Перебираем все услуги
+            std::stringstream ss; // Создаем поток для конвертации стоимости услуги в строку
+            ss << services[i].getCost();  // Получаем стоимость услуги в виде строки
+            std::string costStr = ss.str();  // Получаем строковое представление стоимости услуги из потока
+            std::string serviceInfo = services[i].getName() + " | Cost: " + costStr + " | " + services[i].getDescription(); // Формируем информацию об услуге
+            bool alreadyExists = false; // Инициализируем флаг наличия услуги в файле
+            for (size_t j = 0; j < existingServices.size(); ++j) { // Перебираем все существующие услуги в файле
+                if (existingServices[j] == serviceInfo) {  // Проверяем, не существует ли уже данная услуга в файле
+                    alreadyExists = true;   // Устанавливаем флаг наличия услуги в файле в случае совпадения
+                    break; // Прерываем цикл, так как услуга уже существует
                 }
             }
-            if (!alreadyExists) {
-                file << serviceInfo << std::endl;
+            if (!alreadyExists) { // Если услуги нет в файле, добавляем её
+                file << serviceInfo << std::endl; // Записываем информацию об услуге в файл
             }
         }
-        file.close();
+        file.close(); // Закрываем файл
     } else {
-        std::cerr << "Error: Unable to open file for writing" << std::endl;
+        std::cerr << "Error: Unable to open file for writing" << std::endl; // Выводим сообщение об ошибке, если файл не удалось открыть для записи
     }
 }
-
-
 
 void ClientService::viewClientsFromFile() {
-    std::ifstream file("clients.txt");
-    if (file.is_open()) {
+    std::ifstream file("clients.txt"); // Открываем файл для чтения информации о клиентах
+    if (file.is_open()) { // Проверяем, успешно ли открыт файл
         std::string line;
-        while (std::getline(file, line)) {
-            std::cout << line << std::endl; // Output each line from the file
+        while (std::getline(file, line)) {   // Читаем строки из файла и выводим их на экран
+            std::cout << line << std::endl; // Выводим каждую строку из файла
         }
-        file.close(); // Close the file
+        file.close(); // Закрываем файл
     } else {
-        std::cerr << "Error: Unable to open file for reading" << std::endl;
+        std::cerr << "Error: Unable to open file for reading" << std::endl; // Выводим сообщение об ошибке, если файл не удалось открыть
     }
 }
-void ClientService::addService(const Service& service) {
+void ClientService::addService(const Service & service) {
     // Проверяем, что такой услуги еще нет в списке
-    bool serviceExists = false;
-    for (size_t i = 0; i < services.size(); ++i) {
-        if (services[i].getName() == service.getName()) {
-            serviceExists = true;
-            break;
+    bool serviceExists = false; // Инициализируем флаг наличия услуги в списке
+    for (size_t i = 0; i < services.size(); ++i) { // Проверяем, не существует ли уже данная услуга в списке
+        if (services[i].getName() == service.getName()) { // Проверяем, существует ли уже данная услуга в списке
+            serviceExists = true;  // Устанавливаем флаг наличия услуги в списке в случае совпадения
+            break; // Прерываем цикл, так как услуга уже существует
         }
     }
 
-    if (!serviceExists) {
-        services.push_back(service); // Добавить услугу в список
+    if (!serviceExists) { // Если услуги нет в списке, добавляем её
+        services.push_back(service); // Добавляем услугу в список
 
         // Добавляем информацию о новой услуге в файл
         std::ofstream outputFile("services.txt", std::ios::app); // Открываем файл для добавления информации
-        if (outputFile.is_open()) {
-            outputFile << service.getName() << " | Cost: " << service.getCost() << " | " << service.getDescription() << std::endl; // Сохраняем название, стоимость и описание услуги
-            outputFile.close();
+        if (outputFile.is_open()) { // Проверяем, успешно ли открыт файл для записи
+            outputFile << service.getName() << " | Cost: " << service.getCost() << " | " << service.getDescription() << std::endl; // Записываем информацию о новой услуге в файл
+            outputFile.close(); // Закрываем фай
         } else {
-            std::cerr << "Error: Unable to open file for writing" << std::endl;
+            std::cerr << "Error: Unable to open file for writing" << std::endl; // Выводим сообщение об ошибке, если файл не удалось открыть для записи
         }
         saveServicesToFile(); // Сохраняем все услуги в файл
     } else {
-        std::cout << "Service already exists." << std::endl;
+        std::cout << "Service already exists." << std::endl; // Выводим сообщение о том, что услуга уже существует
     }
 }
 
-
-
 void ClientService::loadServicesFromFile() {
-    std::ifstream file("services.txt");
-    if (file.is_open()) {
+    std::ifstream file("services.txt"); // Открываем файл для чтения списка услуг
+    if (file.is_open()) {  // Проверяем, успешно ли открыт файл
         std::string name;
         double price;
         std::string description;
-        while (file >> name >> price) {
-            file.ignore(); // Ignoring the newline character after price
-            std::getline(file, description);
-            services.push_back(Service(name, price, description));
+        while (file >> name >> price) { // Читаем информацию о каждой услуге из файла
+            file.ignore();// Пропускаем символ новой строки после цены
+            std::getline(file, description);  // Получаем описание услуги
+            services.push_back(Service(name, price, description)); // Добавляем услугу в список
         }
-        file.close();
+        file.close(); // Закрываем файл
     } else {
-        std::cerr << "Error: Unable to open file for reading" << std::endl;
+        std::cerr << "Error: Unable to open file for reading" << std::endl; // Выводим сообщение об ошибке, если файл не удалось открыть для чтения
     }
-    if (file.bad()) {
-        std::cerr << "Error: Failed to read data from file" << std::endl;
+    if (file.bad()) {  // Проверяем, произошла ли ошибка при чтении данных из файла
+        std::cerr << "Error: Failed to read data from file" << std::endl; // Выводим сообщение об ошибке
     }
 }
 
-
-void ClientService::removeService(const std::string& serviceName) {
-    for (size_t i = 0; i < services.size(); ++i) {
-        if (services[i].getName() == serviceName) {
+void ClientService::removeService(const std::string & serviceName) {
+    for (size_t i = 0; i < services.size(); ++i) {  // Перебираем все услуги в списке
+        if (services[i].getName() == serviceName) { // Проверяем, существует ли услуга с заданным именем
             services.erase(services.begin() + i); // Удаляем услугу из списка
             saveServicesToFile(); // Сохраняем изменения в файл
-            return;
+            return; // Завершаем функцию после удаления услуги
         }
     }
-    std::cout << "Service not found." << std::endl;
+    std::cout << "Service not found." << std::endl; // Выводим сообщение, если услуга не найдена
 }
 
 void ClientService::editClientData() {
     system("cls"); // Очистить экран
-    std::cout << "Enter the name of the client you want to edit: ";
+    std::cout << "Enter the name of the client you want to edit: "; // Подсказка для ввода имени клиента
     std::string clientName;
-    std::cin >> clientName;
+    std::cin >> clientName; // Получаем имя клиента от пользователя
 
-    bool found = false;
-    for (size_t i = 0; i < clients.size(); ++i) {
-        if (clients[i].getName() == clientName) {
-            found = true;
+    bool found = false; // Инициализируем флаг нахождения клиента
+    for (size_t i = 0; i < clients.size(); ++i) {  // Перебираем всех клиентов
+        if (clients[i].getName() == clientName) {  // Проверяем, существует ли клиент с данным именем
+            found = true;   // Устанавливаем флаг нахождения клиента
             std::string newName, newEmail, newPhoneNumber;
-            std::cout << "Enter new name for the client: ";
-            std::cin >> newName;
-            std::cout << "Enter new email for the client: ";
-            std::cin >> newEmail;
-            std::cout << "Enter new phone number for the client: ";
-            std::cin >> newPhoneNumber;
+            std::cout << "Enter new name for the client: "; // Подсказка для ввода нового имени
+            std::cin >> newName; // Получаем новое имя для клиента
+            std::cout << "Enter new email for the client: "; // Подсказка для ввода новой почты
+            std::cin >> newEmail;  // Получаем новую почту для клиента
+            std::cout << "Enter new phone number for the client: "; // Подсказка для ввода нового номера телефона
+            std::cin >> newPhoneNumber; // Получаем новый номер телефона для клиента
 
-            clients[i] = Client(newName, newEmail, newPhoneNumber);
-            saveClientsToFile(); // Сохранить измененные данные в файл
+            clients[i] = Client(newName, newEmail, newPhoneNumber);  // Изменяем данные клиента
+            saveClientsToFile(); // Сохраняем измененные данные в файл
             std::cout << "Client data updated. Press Enter to continue..."; // Подсказка для продолжения
             std::cin.get(); // Ждать нажатия клавиши Enter
             std::cin.get(); // Ждать нажатия клавиши Enter
-            break;
+            break; // Завершаем цикл после изменения данных клиента
         }
     }
-    if (!found) {
-        std::cout << "Client not found." << std::endl;
+    if (!found) { // Если клиент не найден
+        std::cout << "Client not found." << std::endl; // Выводим сообщение о том, что клиент не найден
         std::cout << "Press Enter to continue..."; // Подсказка для продолжения
         std::cin.get(); // Ждать нажатия клавиши Enter
         std::cin.get(); // Ждать нажатия клавиши Enter
     }
 }
 
-
-
-
 void ClientService::viewSchedule() {
-    std::ifstream scheduleFile("client_appointments.txt");
-    if (!scheduleFile.is_open()) {
-        std::cerr << "Error: Unable to open schedule file" << std::endl;
-        return;
+    std::ifstream scheduleFile("client_appointments.txt"); // Открываем файл с расписанием
+    if (!scheduleFile.is_open()) {  // Проверяем, успешно ли открыт файл
+        std::cerr << "Error: Unable to open schedule file" << std::endl; // Выводим сообщение об ошибке, если файл не удалось открыть
+        return; // Завершаем функцию
     }
 
     std::string appointment;
-    std::cout << "Scheduled appointments:" << std::endl;
-    while (std::getline(scheduleFile, appointment)) {
-        std::cout << appointment << std::endl;
+    std::cout << "Scheduled appointments:" << std::endl; // Выводим заголовок списка назначенных приемов
+    while (std::getline(scheduleFile, appointment)) {  // Читаем строки из файла и выводим их
+        std::cout << appointment << std::endl; // Выводим каждый назначенный прием
     }
 
-    scheduleFile.close();
+    scheduleFile.close(); // Закрываем файл
 }
 
 void ClientService::displayClientServiceMenu() {
-    int choice;
+    int choice; // Объявляем переменную для хранения выбора пользователя
     do {
         system("cls"); // Очистить экран
+
         std::cout << "Client and Service Settings Menu:\n"; // Отобразить название меню
+
         // Отобразить варианты меню
         std::cout << "1. Add client\n";
         std::cout << "2. Edit client data\n";
@@ -418,46 +413,47 @@ void ClientService::displayClientServiceMenu() {
         std::cout << "8. View all services\n";
         std::cout << "9. Exit\n";
         std::cout << "Enter your choice: ";
+
         std::cin >> choice; // Получить выбор пользователя
 
         switch (choice) { // Обработать выбор пользователя
         case 1: { // Добавить клиента
-                    std::string newName, newEmail, newPhoneNumber;
-                    std::cout << "Enter client name: ";
-                    std::cin >> newName;
-                    std::cout << "Enter client email: ";
-                    std::cin >> newEmail;
-                    std::cout << "Enter client phone number: ";
-                    std::cin >> newPhoneNumber;
+            std::string newName, newEmail, newPhoneNumber;
+            std::cout << "Enter client name: ";
+            std::cin >> newName;
+            std::cout << "Enter client email: ";
+            std::cin >> newEmail;
+            std::cout << "Enter client phone number: ";
+            std::cin >> newPhoneNumber;
 
-                    Client newClient(newName, newEmail, newPhoneNumber);
-                    addClient(newClient); // Добавить нового клиента
-                    std::cout << "Data saved. Press Enter to continue..."; // Подсказка для продолжения
-                    std::cin.get(); // Ждать нажатия клавиши Enter
-                    std::cin.get(); // Ждать нажатия клавиши Enter
-                    break;
-                }
-                case 2: { // Редактировать данные клиента
-                    editClientData();
-                    break;
-                }
-                case 3: { // Удалить клиента
-                    std::string clientName;
-                    std::cout << "Enter client name to remove: ";
-                    std::cin >> clientName;
-                    removeClient(clientName); // Вызов метода для удаления клиента
-                    std::cout << "Press Enter to continue...";
-                    std::cin.get();
-                    std::cin.get();
-                    break;
-                }
-                case 4: { // Просмотр клиентов
-                    viewClientsFromFile(); // Вызов метода для просмотра клиентов
-                    std::cout << "Press Enter to continue..."; // Подсказка для продолжения
-                    std::cin.get(); // Ждать нажатия клавиши Enter
-                    std::cin.get(); // Ждать нажатия клавиши Enter
-                    break;
-                }
+            Client newClient(newName, newEmail, newPhoneNumber);
+            addClient(newClient); // Добавить нового клиента
+            std::cout << "Data saved. Press Enter to continue..."; // Подсказка для продолжения
+            std::cin.get(); // Ждать нажатия клавиши Enter
+            std::cin.get(); // Ждать нажатия клавиши Enter
+            break;
+        }
+        case 2: { // Редактировать данные клиента
+            editClientData();
+            break;
+        }
+        case 3: { // Удалить клиента
+            std::string clientName;
+            std::cout << "Enter client name to remove: ";
+            std::cin >> clientName;
+            removeClient(clientName); // Вызов метода для удаления клиента
+            std::cout << "Press Enter to continue...";
+            std::cin.get();
+            std::cin.get();
+            break;
+        }
+        case 4: { // Просмотр клиентов
+            viewClientsFromFile(); // Вызов метода для просмотра клиентов
+            std::cout << "Press Enter to continue..."; // Подсказка для продолжения
+            std::cin.get(); // Ждать нажатия клавиши Enter
+            std::cin.get(); // Ждать нажатия клавиши Enter
+            break;
+        }
         case 5: { // Добавить услугу
             std::string serviceName;
             double servicePrice;
@@ -489,7 +485,8 @@ void ClientService::displayClientServiceMenu() {
             break;
         }
         case 8: { // Просмотреть все услуги
-            viewServicesFromFile(); // Вызов метода для просмотра услуг
+            Service service;
+            service.viewServicesFromFile(); // Вызов метода для просмотра услуг
             std::cout << "Press Enter to continue..."; // Подсказка для продолжения
             std::cin.get(); // Ждать нажатия клавиши Enter
             std::cin.get(); // Ждать нажатия клавиши Enter

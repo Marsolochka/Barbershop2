@@ -6,7 +6,6 @@
 class MainScreen {
 public:
     void startMainLoop(const std::string& username);
-    void cheduleService();
 };
 
 #endif // MAIN_SCREEN_H
