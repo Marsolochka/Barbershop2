@@ -242,4 +242,10 @@ std::pair<std::string, std::string> Administrator::getItemInfo(int itemId) {
 }
 
 
-
+void Administrator::editItemInfo(int itemId, const std::string &newName, const std::string &newDescription) {
+   if (itemId < items.size()) {
+       items[itemId] = std::make_pair(newName, newDescription);
+   } else {
+       throw std::runtime_error("Not found item with ID: " + std::to_string(itemId));
+   }
+}
