@@ -32,6 +32,7 @@ void Administrator::enterAdministratorMenu() {
             switch (adminSubMenuChoice) {
             case 1: // Add item
                 {
+                    system("cls");
                     std::string name, description;
                     std::cout << "Enter the name of the item: ";
                     std::cin >> name;
@@ -44,6 +45,7 @@ void Administrator::enterAdministratorMenu() {
                 }
                 case 2: // Remove item
                 {
+                    system("cls");
                     int itemId;
                     std::cout << "Enter the ID of the item to remove: ";
                     std::cin >> itemId;
@@ -58,6 +60,7 @@ void Administrator::enterAdministratorMenu() {
                 }
                 case 3: // Edit item
                 {
+                    system("cls");
                     int itemId;
                     std::string newName, newDescription;
                     std::cout << "Enter the ID of the item to edit: ";
@@ -77,6 +80,7 @@ void Administrator::enterAdministratorMenu() {
                 }
                 case 4: // View all items
                 {
+                    system("cls");
                     for (size_t i = 0; i < items.size(); ++i) {
                         std::pair<std::string, std::string> item = items[i];
                         std::cout << "Item ID: " << i << ", Name: " << item.first << ", Description: " << item.second << "\n";
@@ -85,6 +89,7 @@ void Administrator::enterAdministratorMenu() {
                 }
             case 5: // Пункт меню для добавления сотрудника
             {
+                 system("cls");
                 std::string name, JobTitle;
                 std::cout << "Enter employee name: ";
                 std::cin >> name;
@@ -96,6 +101,7 @@ void Administrator::enterAdministratorMenu() {
             }
             case 6: // Menu item for removing an employee
             {
+                system("cls");
                 int employeeId;
                 std::cout << "Enter the ID of the employee to remove: ";
                 std::cin >> employeeId;
@@ -110,11 +116,13 @@ void Administrator::enterAdministratorMenu() {
 
             case 7: // Menu item for viewing all employees
             {
+                system("cls");
                 viewAllEmployees();
                 system("pause");
                 break;
             }
             case 8: {
+                system("cls");
                 int employeeId;
                 std::string newName, newJobTitle;
 
@@ -138,6 +146,7 @@ void Administrator::enterAdministratorMenu() {
             }
             case 9: // Пункт меню для финансов
             {
+                system("cls");
                 std::string startDateTime, endDateTime;
 
                 std::regex dateTimePattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}");

@@ -428,6 +428,7 @@ void ClientService::displayClientServiceMenu() {
 
         switch (choice) { // Обработать выбор пользователя
         case 1: { // Добавить клиента
+            system("cls");
             std::string newName, newEmail, newPhoneNumber;
             std::cout << "Enter client name: ";
             std::cin >> newName;
@@ -436,18 +437,9 @@ void ClientService::displayClientServiceMenu() {
             std::cout << "Enter client phone number: ";
             std::cin >> newPhoneNumber;
             std::string consent;
-
-            std::cout << "Do you consent to add the client data? (yes/no): ";
-            std::cin >> consent;
-
-            if (consent == "yes") {
                 Client newClient(newName, newEmail, newPhoneNumber);
                 addClient(newClient); // Добавить нового клиента
                 std::cout << "Data saved successfully." << std::endl;
-            } else {
-                std::cout << "Client data was not added." << std::endl;
-            }
-
             std::cout << "Press Enter to continue..."; // Подсказка для продолжения
             std::cin.ignore(); // Игнорируем символ новой строки во входном потоке
             std::cin.get(); // Ждать нажатия клавиши Enter
@@ -455,10 +447,12 @@ void ClientService::displayClientServiceMenu() {
         }
 
         case 2: { // Редактировать данные клиента
+            system("cls");
             editClientData();
             break;
         }
         case 3: { // Удалить клиента
+            system("cls");
             std::string clientName;
             std::cout << "Enter client name to remove: ";
             std::cin >> clientName;
@@ -469,6 +463,7 @@ void ClientService::displayClientServiceMenu() {
             break;
         }
         case 4: { // Просмотр клиентов
+            system("cls");
             viewClientsFromFile(); // Вызов метода для просмотра клиентов
             std::cout << "Press Enter to continue..."; // Подсказка для продолжения
             std::cin.get(); // Ждать нажатия клавиши Enter
@@ -476,6 +471,7 @@ void ClientService::displayClientServiceMenu() {
             break;
         }
         case 5: { // Добавить услугу
+            system("cls");
             std::string serviceName;
             double servicePrice;
             std::string serviceDescription; // Добавлено для ввода описания услуги
@@ -496,6 +492,7 @@ void ClientService::displayClientServiceMenu() {
         }
 
         case 6: { // Удалить услугу
+            system("cls");
             std::string serviceName;
             std::cout << "Enter service name to remove: ";
             std::cin >> serviceName;
@@ -506,6 +503,7 @@ void ClientService::displayClientServiceMenu() {
             break;
         }
         case 7: { // Просмотреть все услуги
+            system("cls");
             Service service;
             service.viewServicesFromFile(); // Вызов метода для просмотра услуг
             std::cout << "Press Enter to continue..."; // Подсказка для продолжения
