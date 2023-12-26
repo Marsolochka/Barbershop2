@@ -39,6 +39,7 @@ void Administrator::enterAdministratorMenu() {
                     std::cout << "Enter the description of the item: ";
                     std::cin >> description;
                     addItem(name, description);
+                    saveItemsToFile("items.txt");
                     std::cout << "Item added successfully.\n";
                     system("pause");
                     break;
@@ -51,11 +52,11 @@ void Administrator::enterAdministratorMenu() {
                     std::cin >> itemId;
                     try {
                         removeItem(itemId);
-                        std::cout << "Item removed successfully.\n";
+                        saveItemsToFile("items.txt"); // Сохраняем изменения в файл
                     } catch (const std::runtime_error& e) {
                         std::cerr << e.what() << std::endl;
                     }
-                    system("pause");
+system("pause");
                     break;
                 }
                 case 3: // Edit item
@@ -70,11 +71,12 @@ void Administrator::enterAdministratorMenu() {
                     std::cout << "Enter the new description of the item: ";
                     std::cin >> newDescription;
                     try {
-                        editItemInfo(itemId, newName, newDescription);
-                        std::cout << "Item edited successfully.\n";
-                    } catch (const std::runtime_error& e) {
-                        std::cerr << e.what() << std::endl;
-                    }
+                            editItemInfo(itemId, newName, newDescription);
+                            saveItemsToFile("items.txt"); // Сохраняем изменения в файл
+                        } catch (const std::runtime_error& e) {
+                            std::cerr << e.what() << std::endl;
+                        }
+                        break;
                     system("pause");
                     break;
                 }
@@ -85,6 +87,7 @@ void Administrator::enterAdministratorMenu() {
                         std::pair<std::string, std::string> item = items[i];
                         std::cout << "Item ID: " << i << ", Name: " << item.first << ", Description: " << item.second << "\n";
                     }
+                    system("pause"); // Приостанавливаем выполнение программы до нажатия клавиши
                     break;
                 }
             case 5: // Пункт меню для добавления сотрудника
@@ -99,7 +102,7 @@ void Administrator::enterAdministratorMenu() {
                 system("pause");
                 break;
             }
-            case 6: // Menu item for removing an employee
+            case 6:
             {
                 system("cls");
                 int employeeId;
@@ -111,10 +114,11 @@ void Administrator::enterAdministratorMenu() {
                 } catch (const std::runtime_error & e) {
                     std::cout << "Error: " << e.what() << std::endl;
                 }
+                system("pause");
                 break;
             }
 
-            case 7: // Menu item for viewing all employees
+            case 7:
             {
                 system("cls");
                 viewAllEmployees();
@@ -225,11 +229,43 @@ void Administrator::saveEmployeesToFile() {
     }
 }
 
+void Administrator::saveItemsToFile(const std::string& filename) {
+       std::ofstream file(filename);
+       if (file.is_open()) {
+           for (const auto& item : items) {
+               file << item.first << " " << item.second << "\n";
+
+           }
+           file.close();
+       } else {
+           throw std::runtime_error("Unable to open file for writing: " + filename);
+       }
+   }
+
+void Administrator::loadItemsFromFile(const std::string& filename) {
+       std::ifstream file(filename);
+       if (file.is_open()) {
+           items.clear(); // Очищаем текущие элементы
+           std::string line;
+           while (std::getline(file, line)) {
+               size_t pos = line.find(",");
+               if (pos != std::string::npos) {
+                   std::string name = line.substr(0, pos);
+                   std::string description = line.substr(pos + 1);
+                   items.emplace_back(name, description);
+               }
+           }
+           file.close();
+       } else {
+           throw std::runtime_error("Unable to open file for reading: " + filename);
+       }
+   }
+
 void Administrator::viewAllEmployees() {
     loadEmployeesFromFile(); // Загружаем данные перед выводом списка сотрудников
     std::cout << "Employee List:\n";
     for (int i = 0; i < static_cast < int > (employees.size()); ++i) {
-        std::cout << "ID: " << i << ", Employee Info: " << employees[i] << std::endl;
+        std::cout << "ID: " << i << "Employee Info: " << employees[i] << std::endl;
     }
 }
 
